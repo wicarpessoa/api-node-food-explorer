@@ -1,6 +1,7 @@
 const { Router } = require("express")
 
-const FoodsController = require("../controllers/FoodsController")
+const FoodsController = require("../controllers/FoodsController");
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
 
 const foodsRoutes = Router()
 
@@ -12,6 +13,7 @@ const foodsRoutes = Router()
 const foodsController = new FoodsController() 
 
 
-foodsRoutes.post("/", foodsController.create)
+foodsRoutes.post("/",ensureAuthenticated, foodsController.create);
+foodsRoutes.get("/", foodsController.index);
 
 module.exports = foodsRoutes;

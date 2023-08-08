@@ -4,7 +4,6 @@ const knex = require("../database/knex")
 class UsersController {
     async create(request, response) {
         const { name, email, password} = request.body;
-
         const checkIfUserExists = await knex("users").where({email}).first()
         if (checkIfUserExists) {
             console.log(checkIfUserExists)
@@ -23,8 +22,7 @@ class UsersController {
 
     async update(request, response) {
         const {name, email, password, old_password} = request.body;
-        const {id} = request.params;
-
+        const id = request.user.id
         const user = await knex("users").where({id}).first();
 
         if(!user) {
