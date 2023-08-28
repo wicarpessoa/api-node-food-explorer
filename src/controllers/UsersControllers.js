@@ -5,19 +5,23 @@ class UsersController {
     async create(request, response) {
         const { name, email, password} = request.body;
         const checkIfUserExists = await knex("users").where({email}).first()
+        const checkIfIsFirstUser = await knex("users").where({id:1}).first()
+        let isAdmin = 0
+        if (!checkIfIsFirstUser) {
+            isAdmin = 1
+        }
         if (checkIfUserExists) {
-            console.log(checkIfUserExists)
             throw new AppError("Este email já está em uso!")
         }
         const hashedPassword = await hash(password, 8)
          await knex("users").insert({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            isAdmin
         });
        
-        console.log(checkIfUserExists)
-        response.status(201).json({name,email,password})
+        response.status(201).json({name,email,password,isAdmin})
     }
 
     async update(request, response) {
@@ -30,7 +34,6 @@ class UsersController {
         } 
         if (email) {
             const userWithUpdatedEmail = await knex("users").where({email}).first()
-            console.log(userWithUpdatedEmail)
 
         if(userWithUpdatedEmail && userWithUpdatedEmail.id !== id) {
             throw new AppError("Este email já está em uso!")

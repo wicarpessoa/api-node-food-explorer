@@ -8,8 +8,13 @@ class CategoriesController {
       name
   })
   response.status(201).json()
+   }
+   
+   async index(request, response) {
+      const categories = await knex("categories")
 
-   } 
+      response.status(201).json(categories)
+   }
 }
 
 module.exports = CategoriesController
