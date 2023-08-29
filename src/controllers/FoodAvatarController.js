@@ -5,8 +5,6 @@ class FoodAvatarController {
   async update(request,response) {
     const {food_id} = request.params
     const foodImgFilename = request.file.filename
-    console.log(foodImgFilename)
-    console.log(food_id)
     const diskStorage = new DiskStorage()
 
     const food = await knex("foods").where({id: food_id}).first()

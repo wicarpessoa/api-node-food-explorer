@@ -35,7 +35,7 @@ class FoodsController {
     try {
       const { title, description, price, category_id, ingredients } = request.body
     const { id } = request.params;
-    console.log(price)
+
     const food = await knex("foods").where({id}).first();
 
 
@@ -53,11 +53,10 @@ class FoodsController {
           name: ingredient,
         };
       });
-      console.log(ingredientsInsert)
+
       await knex("ingredients").insert(
         ingredientsInsert
       )
-      console.log("aaaasdasdasdasdasdasda")
       response.status(200).json(food)
 
     } 
@@ -116,15 +115,26 @@ class FoodsController {
       } else {
         response.status(201).json(food)
       }
-     
-     
-  
-      
-      
      }catch(error) {
       response.status(404).json(error)
     } 
     }
+
+    async delete(request, response) {
+      const { id } = request.params
+      try {
+        const food = await knex("foods").where({id}).del()
+        console.log(food)
+        if (!food) {
+          throw new AppError("Não foi possivel excluir o prato!")
+        }
+        
+          response.status(201).json(food)
+        } catch(error) {
+        response.status(404).json(error)
+      } 
+    }
+
 }
 
 module.exports = FoodsController
